@@ -6,6 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   Button,
+  FlatList,
 } from 'react-native';
 import MyModal from '../Component/modal';
 
@@ -13,61 +14,131 @@ const Devicewidth = Dimensions.get('window').width;
 const Deviceheight = Dimensions.get('window').height;
 
 const Reactjs = () => {
+  const [selectedQuestion, setStateselectedQuestion] = useState('');
+
   const [showModal, setShowModal] = useState(false);
   const modalClose = () => setShowModal(false);
 
-  const handleViewDetails = () => {
+  const handleViewDetails = id => {
+    // console.log('this my data set', id);
+    setStateselectedQuestion(id);
     setShowModal(true);
   };
+  const handleshowmore = id => {
+    console.log('showmore button clicked');
+  };
 
-  const data = [
+  const MyReactjsdata = [
     {
+      id: 10,
       name: 'Question 1 ReactJs',
       content:
         "Question 1 ReactJs  ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
+      id: 20,
       name: 'Question 5 ReactJs ',
       content:
         "Question 5 ReactJs  ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
+      id: 30,
       name: 'Question 2 ReactJs ',
       content:
         "Question 2 ReactJs  ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
+      id: 40,
       name: 'Question 3 ReactJs ',
       content:
         "Question 3 ReactJs  ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
+      id: 50,
       name: 'Question 4 ReactJs ',
       content:
         "Question 4 ReactJs  ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
   ];
   return (
-    <View style={styles.container}>
+    <View style={styles.body}>
+      <MyModal
+        show={showModal}
+        close={modalClose}
+        cameFrom={selectedQuestion}
+      />
+      <FlatList
+        data={MyReactjsdata}
+        renderItem={({item}) => (
+          <View
+            style={{
+              elevation: 2,
+              marginHorizontal: 10,
+              marginVertical: 5,
+              borderRadius: 10,
+              // justifyContent: 'center',
+              // alignItems: 'center',
+              backgroundColor: '#fff',
+              paddingHorizontal: 10,
+            }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: 'bold',
+                textAlign: 'left',
+                color: '#000',
+                marginBottom: 2,
+              }}>
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'left',
+                color: '#000',
+                marginBottom: 2,
+              }}
+              numberOfLines={2}>
+              {item.content}
+            </Text>
+            <TouchableOpacity
+              style={{
+                height: Deviceheight / 24,
+                width: Devicewidth / 3.5,
+                backgroundColor: '#989ab5',
+                justifyContent: 'center',
+                borderRadius: 360,
+                marginVertical: 5,
+                alignItems: 'center',
+              }}
+              onPress={() => handleViewDetails(item.id)}>
+              <Text style={{color: 'black'}}>View Details</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
       <TouchableOpacity
         style={{
-          height: Devicewidth / 8,
-          width: Devicewidth / 0.8,
-          backgroundColor: 'yellow',
+          height: Deviceheight / 22,
+          width: Devicewidth / 3.5,
+          backgroundColor: '#adb1f7',
+          justifyContent: 'center',
+          borderRadius: 10,
+          marginVertical: 5,
+          alignItems: 'center',
+          alignSelf: 'center',
+          marginBottom: 10,
         }}
-        onPress={handleViewDetails}>
-        <Text style={{color: 'black'}}>View Details</Text>
+        onPress={() => handleshowmore()}>
+        <Text style={{color: 'black', fontSize: 14, fontWeight: 500}}>
+          Show more
+        </Text>
       </TouchableOpacity>
-      <MyModal show={showModal} close={modalClose} cameFrom={'Reactjs'} />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    // height: Deviceheight,
-    // width: Devicewidth,
-    backgroundColor: 'purple',
-    justifyContent: 'flex-end',
+  body: {
     flex: 1,
   },
 });

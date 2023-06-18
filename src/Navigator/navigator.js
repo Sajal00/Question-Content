@@ -12,7 +12,7 @@ export default function AppNavigator() {
   };
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOption={screenOptionStyle}>
         <Stack.Screen name="splashNavigator" component={Splash} />
         <Stack.Screen name="homeNavigator" component={Home} />
       </Stack.Navigator>

@@ -7,91 +7,118 @@ import {
   StyleSheet,
   Button,
   FlatList,
+  Linking,
 } from 'react-native';
-import MyModal from '../Component/modal';
 
 const Devicewidth = Dimensions.get('window').width;
 const Deviceheight = Dimensions.get('window').height;
 
 const Reactnative = () => {
-  const [selectedQuestion, setStateselectedQuestion] = useState('');
+  // const [selectedQuestion, setStateselectedQuestion] = useState('');
+  const [reactNativeQuestion, setreactNativeQuestion] = useState([]);
+  const [questionList, setQuestionlist] = useState([]);
 
-  const [showModal, setShowModal] = useState(false);
-  const modalClose = () => setShowModal(false);
-
-  const handleViewDetails = id => {
-    console.log('this my data set', id);
-    setStateselectedQuestion(id);
-    setShowModal(true);
+  const handleViewDetails = data => {
+    Linking.openURL(data);
+  };
+  const handleshowmore = () => {
+    const items = questionList;
+    let displayedItems = reactNativeQuestion?.length;
+    const itemsPerClick = 10;
+    if (displayedItems + itemsPerClick <= items.length) {
+      displayedItems += itemsPerClick;
+    } else {
+      displayedItems = items.length;
+    }
+    const currentDisplay = items.slice(0, displayedItems);
+    setreactNativeQuestion(currentDisplay);
   };
 
-  const Mydata = [
-    {
-      id: 1,
-      name: 'Question 1 React Native',
-      content:
-        "Question 1 React Native ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    {
-      id: 2,
-      name: 'Question 5 React Native',
-      content:
-        "Question 5 React Native ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    {
-      id: 3,
-      name: 'Question 2 React Native',
-      content:
-        "Question 2 React Native ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    {
-      id: 4,
-      name: 'Question 3 React Native',
-      content:
-        "Question 3 React Native ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    {
-      id: 5,
-      name: 'Question 4 React Native',
-      content:
-        "Question 4 React Native ---->Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-  ];
+  const getAPIdata = async () => {
+    const url =
+      'https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&tagged=react-native&site=stackoverflow';
+    let result = await fetch(url);
+    result = await result.json();
+
+    let questions = result?.items;
+    setQuestionlist(questions);
+    let questiontoshow = [];
+    if (questions.length >= 10) {
+      questiontoshow = questions.slice(0, 10);
+    } else {
+      questiontoshow = questions.slice(0, questions.length);
+    }
+    setreactNativeQuestion(questiontoshow);
+  };
+  useEffect(() => {
+    getAPIdata();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <MyModal
-        show={showModal}
-        close={modalClose}
-        cameFrom={selectedQuestion}
-      />
+    <View style={styles.body}>
       <FlatList
-        data={Mydata}
+        data={reactNativeQuestion}
         renderItem={({item}) => (
-          <View style={{elevation: 5}}>
-            <Text>{item.name}</Text>
-            <Text numberOfLines={1}>{item.content}</Text>
+          <View style={styles.questionContainer}>
+            <Text style={styles.questionTitle}>{item?.title}</Text>
             <TouchableOpacity
-              style={{
-                height: Devicewidth / 12,
-                width: Devicewidth / 2,
-                backgroundColor: 'yellow',
-              }}
-              onPress={() => handleViewDetails(item.id)}>
+              style={styles.questionDetails}
+              onPress={() => handleViewDetails(item?.link)}>
               <Text style={{color: 'black'}}>View Details</Text>
             </TouchableOpacity>
           </View>
         )}
       />
+      <TouchableOpacity
+        style={styles.showMoreButton}
+        onPress={() => handleshowmore()}>
+        <Text style={{color: 'black', fontSize: 14, fontWeight: 500}}>
+          Show more
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    // height: Deviceheight,
-    // width: Devicewidth,
-    // backgroundColor: 'purple',
-    justifyContent: 'flex-end',
+  body: {
     flex: 1,
+  },
+  questionContainer: {
+    elevation: 3,
+    marginHorizontal: 10,
+    marginVertical: 7,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  questionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: '#000',
+    marginBottom: 2,
+  },
+  questionDetails: {
+    height: Deviceheight / 24,
+    width: Devicewidth / 3.5,
+    backgroundColor: '#989ab5',
+    justifyContent: 'center',
+    borderRadius: 360,
+    marginVertical: 5,
+    alignItems: 'center',
+  },
+  showMoreButton: {
+    elevation: 3,
+    height: Deviceheight / 22,
+    width: Devicewidth / 3.5,
+    backgroundColor: '#adb1f7',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginVertical: 5,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginVertical: 10,
   },
 });
 
