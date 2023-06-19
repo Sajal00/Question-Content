@@ -14,21 +14,21 @@ function Home() {
         name="reactnative"
         component={Reactnative}
         options={{
-          tabBarLabel: 'React Native',
+          tabBarLabel: 'ReactNative',
         }}
       />
       <Tab.Screen
         name="reactJs"
         component={Reactjs}
         options={{
-          tabBarLabel: 'React Js',
+          tabBarLabel: 'React',
         }}
       />
       <Tab.Screen
         name="nodeJs"
         component={Nodejs}
         options={{
-          tabBarLabel: 'Node Js',
+          tabBarLabel: 'Node',
         }}
       />
     </Tab.Navigator>

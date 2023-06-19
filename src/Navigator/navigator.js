@@ -7,12 +7,12 @@ import Home from '../Screen/homescreen';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-  const screenOptionStyle = {
-    headerShown: false,
-  };
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOption={screenOptionStyle}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
         <Stack.Screen name="splashNavigator" component={Splash} />
         <Stack.Screen name="homeNavigator" component={Home} />
       </Stack.Navigator>
