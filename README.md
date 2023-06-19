@@ -7,6 +7,8 @@
   -  In each tab, show the [hottest questions](https://api.stackexchange.com/docs/questions)  for that topic. Scrolling down the page should load more questions.
   -  Clicking a specific question opens its question page in the phone browser.
 
+## To Run the Application Localy Follow below Steps:
+
 ## Dependencies:
 [Packages Used](https://github.com/Sajal00/Question-Content/blob/main/package.json)
 #### Execute Command to get all dependencies
